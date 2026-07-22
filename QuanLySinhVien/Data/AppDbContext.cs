@@ -24,6 +24,8 @@ namespace QuanLySinhVien.Data
         public DbSet<Lop> Lops { get; set; }
         public DbSet<CaHoc> CaHocs { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
+        public DbSet<MonHoc> MonHocs { get; set; }
+        public DbSet<DiemSo> DiemSos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,6 +51,15 @@ namespace QuanLySinhVien.Data
                 .HasIndex(tk => tk.TenDangNhap)
                 .IsUnique();
 
+            modelBuilder.Entity<MonHoc>()
+                .HasIndex(m => m.MaMonHoc)
+                .IsUnique();
+
+            // 1 sinh viên chỉ có tối đa 1 dòng điểm cho mỗi môn học
+            modelBuilder.Entity<DiemSo>()
+                .HasIndex(d => new { d.SinhVienId, d.MonHocId })
+                .IsUnique();
+
             // Sinh viên xóa Lớp thì không được xóa luôn sinh viên trong lớp đó (tránh mất dữ liệu),
             // mình sẽ tự kiểm tra ở tầng Repository trước khi cho xóa Lớp/Ca học.
             modelBuilder.Entity<SinhVien>()
@@ -61,6 +72,22 @@ namespace QuanLySinhVien.Data
                 .HasOne(sv => sv.CaHoc)
                 .WithMany(c => c.DanhSachSinhVien)
                 .HasForeignKey(sv => sv.CaHocId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Điểm là dữ liệu con phụ thuộc vào sinh viên (khác với Lớp/Ca học là dữ liệu
+            // tham chiếu), nên xóa sinh viên thì cho xóa cascade luôn toàn bộ điểm của SV đó.
+            modelBuilder.Entity<DiemSo>()
+                .HasOne(d => d.SinhVien)
+                .WithMany(sv => sv.DanhSachDiem)
+                .HasForeignKey(d => d.SinhVienId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Môn học vẫn là dữ liệu tham chiếu dùng chung, không cho xóa nếu còn điểm
+            // tham chiếu tới (Repository tự kiểm tra bằng CoTheXoa trước khi xóa).
+            modelBuilder.Entity<DiemSo>()
+                .HasOne(d => d.MonHoc)
+                .WithMany(m => m.DanhSachDiem)
+                .HasForeignKey(d => d.MonHocId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

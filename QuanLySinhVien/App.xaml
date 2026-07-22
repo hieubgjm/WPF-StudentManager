@@ -78,6 +78,23 @@
                 <Setter Property="VerticalContentAlignment" Value="Center" />
             </Style>
 
+            <!-- Style cho các thẻ số liệu ở màn hình Dashboard (Tổng SV, Nam/Nữ...) -->
+            <Style x:Key="TheSoLieu" TargetType="Border">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="BorderBrush" Value="#E0E4EC" />
+                <Setter Property="BorderThickness" Value="1" />
+            </Style>
+
+            <!-- Style cho số liệu to trong thẻ, dùng chung màu chính của app -->
+            <Style x:Key="SoLieuLon" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="{StaticResource MauChinh}" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -18,6 +18,10 @@ namespace QuanLySinhVien.Models
         // Lớp này thuộc khoa nào, ví dụ "Công nghệ thông tin"
         public string Khoa { get; set; }
 
+        // Lớp này thuộc khóa nào, ví dụ "2021-2025". Khác với Khoa (ngành/khoa đào tạo)
+        // ở trên, KhoaHoc dùng để nhóm sinh viên theo niên khóa nhập học khi thống kê.
+        public string KhoaHoc { get; set; }
+
         // Sĩ số tối đa cho phép của lớp, dùng để cảnh báo khi thêm sinh viên vượt quá
         public int SiSoToiDa { get; set; }
 

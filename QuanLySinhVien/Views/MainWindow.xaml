@@ -45,7 +45,13 @@
             <TabItem Header="Ca học">
                 <views:CaHocControl />
             </TabItem>
-            <TabItem Header="Thống kê">
+            <TabItem Header="Môn học">
+                <views:MonHocControl />
+            </TabItem>
+            <TabItem Header="Bảng điểm">
+                <views:DiemSoControl />
+            </TabItem>
+            <TabItem Header="Dashboard">
                 <views:ThongKeControl />
             </TabItem>
             <!-- Tab quản lý tài khoản chỉ hiện với Admin, xem code-behind hàm KiemTraQuyenAdmin -->

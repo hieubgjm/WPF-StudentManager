@@ -1,58 +1,116 @@
 <UserControl x:Class="QuanLySinhVien.Views.ThongKeControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid Margin="8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
 
-        <!-- 3 ô số liệu tổng quan -->
-        <UniformGrid Grid.Row="0" Rows="1" Columns="3" Margin="0,0,0,16">
-            <Border Background="White" CornerRadius="8" Margin="0,0,8,0" Padding="16"
+    <!-- Dashboard dài hơn màn hình nên bọc trong ScrollViewer để cuộn dọc khi cần -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="320" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="280" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <TextBlock Text="Dashboard" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
+                <Button Content="Làm mới" Style="{StaticResource NutPhu}"
+                        HorizontalAlignment="Right" Click="btnLamMoi_Click" />
+            </Grid>
+
+            <!-- Hàng thẻ số liệu tổng quan: 2 dòng x 4 ô cho gọn -->
+            <UniformGrid Grid.Row="1" Rows="2" Columns="4" Margin="0,0,0,16">
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Tổng số sinh viên" Foreground="Gray" />
+                        <TextBlock x:Name="lblTongSinhVien" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Tổng số lớp" Foreground="Gray" />
+                        <TextBlock x:Name="lblTongLop" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Sinh viên Nam" Foreground="Gray" />
+                        <TextBlock x:Name="lblSoNam" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Sinh viên Nữ" Foreground="Gray" />
+                        <TextBlock x:Name="lblSoNu" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Đang học" Foreground="Gray" />
+                        <TextBlock x:Name="lblDangHoc" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Bảo lưu" Foreground="Gray" />
+                        <TextBlock x:Name="lblBaoLuu" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Tốt nghiệp" Foreground="Gray" />
+                        <TextBlock x:Name="lblTotNghiep" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource TheSoLieu}">
+                    <StackPanel>
+                        <TextBlock Text="Tổng số ca học" Foreground="Gray" />
+                        <TextBlock x:Name="lblTongCaHoc" Style="{StaticResource SoLieuLon}" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- 2 biểu đồ cột: số sinh viên theo Khoa và theo Khóa học -->
+            <Grid Grid.Row="2" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="12"
+                        BorderBrush="#E0E4EC" BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Sinh viên theo Khoa" FontWeight="SemiBold" Margin="4,0,0,8" />
+                        <lvc:CartesianChart Grid.Row="1" x:Name="chartTheoKhoa" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="12"
+                        BorderBrush="#E0E4EC" BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Sinh viên theo Khóa học" FontWeight="SemiBold" Margin="4,0,0,8" />
+                        <lvc:CartesianChart Grid.Row="1" x:Name="chartTheoKhoaHoc" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <TextBlock Grid.Row="3" Text="Sĩ số theo từng lớp" FontWeight="SemiBold" Margin="4,0,0,8" />
+
+            <!-- Bảng sĩ số từng lớp -->
+            <Border Grid.Row="4" Background="White" CornerRadius="8" Padding="12"
                     BorderBrush="#E0E4EC" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="Tổng số sinh viên" Foreground="Gray" />
-                    <TextBlock x:Name="lblTongSinhVien" FontSize="28" FontWeight="Bold"
-                               Foreground="{StaticResource MauChinh}" />
-                </StackPanel>
-            </Border>
-
-            <Border Background="White" CornerRadius="8" Margin="8,0" Padding="16"
-                    BorderBrush="#E0E4EC" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="Tổng số lớp học" Foreground="Gray" />
-                    <TextBlock x:Name="lblTongLop" FontSize="28" FontWeight="Bold"
-                               Foreground="{StaticResource MauChinh}" />
-                </StackPanel>
-            </Border>
-
-            <Border Background="White" CornerRadius="8" Margin="8,0,0,0" Padding="16"
-                    BorderBrush="#E0E4EC" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="Tổng số ca học" Foreground="Gray" />
-                    <TextBlock x:Name="lblTongCaHoc" FontSize="28" FontWeight="Bold"
-                               Foreground="{StaticResource MauChinh}" />
-                </StackPanel>
-            </Border>
-        </UniformGrid>
-
-        <!-- Bảng sĩ số từng lớp -->
-        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="12"
-                BorderBrush="#E0E4EC" BorderThickness="1">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0" Margin="4,0,0,8">
-                    <TextBlock Text="Sĩ số theo từng lớp" FontWeight="SemiBold" VerticalAlignment="Center" />
-                    <Button Content="Làm mới" Style="{StaticResource NutPhu}"
-                            HorizontalAlignment="Right" Click="btnLamMoi_Click" />
-                </Grid>
-
-                <DataGrid Grid.Row="1" x:Name="dgSiSoLop"
+                <DataGrid x:Name="dgSiSoLop"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           CanUserAddRows="False"
@@ -63,7 +121,7 @@
                         <DataGridTextColumn Header="Sĩ số tối đa" Binding="{Binding SiSoToiDa}" Width="130" />
                     </DataGrid.Columns>
                 </DataGrid>
-            </Grid>
-        </Border>
-    </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

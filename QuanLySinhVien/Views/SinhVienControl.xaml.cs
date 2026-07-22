@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,8 +22,9 @@ namespace QuanLySinhVien.Views
         {
             InitializeComponent();
             TaiDanhSachLop();
-            TaiDuLieu();
+            TaiDanhSachKhoa();
             _dangKhoiTao = false;
+            TaiDuLieu();
         }
 
         // Đổ danh sách lớp vào ComboBox lọc, thêm 1 dòng "Tất cả các lớp" ở đầu
@@ -36,28 +40,93 @@ namespace QuanLySinhVien.Views
             cboLocLop.SelectedIndex = 0;
         }
 
+        // Khoa không có bảng riêng, chỉ là 1 cột chữ trong bảng Lớp, nên lấy distinct
+        // từ danh sách lớp hiện có để đổ lên ComboBox lọc theo khoa.
+        private void TaiDanhSachKhoa()
+        {
+            var danhSachKhoa = new List<string> { "-- Tất cả các khoa --" };
+            danhSachKhoa.AddRange(
+                _lopRepo.LayTatCa()
+                    .Select(l => l.Khoa)
+                    .Where(k => !string.IsNullOrWhiteSpace(k))
+                    .Distinct()
+                    .OrderBy(k => k));
+
+            cboLocKhoa.ItemsSource = danhSachKhoa;
+            cboLocKhoa.SelectedIndex = 0;
+        }
+
+        // Gom toàn bộ tiêu chí đang chọn trên khu vực bộ lọc thành 1 BoLocSinhVien
+        // rồi gọi Repository lọc nâng cao, đổ kết quả lên DataGrid.
         private void TaiDuLieu()
         {
-            string tuKhoa = txtTuKhoa.Text;
-            int lopIdLoc = (int)(cboLocLop.SelectedValue ?? 0);
+            var boLoc = new BoLocSinhVien
+            {
+                TuKhoa = txtTuKhoa.Text,
+                LopId = (int?)cboLocLop.SelectedValue,
+                Khoa = LayGiaTriKhoaDangChon(),
+                GioiTinh = LayNoiDungComboBoxItem(cboLocGioiTinh),
+                TrangThai = LayNoiDungComboBoxItem(cboLocTrangThai),
+                NgaySinhTu = dpNgaySinhTu.SelectedDate,
+                NgaySinhDen = dpNgaySinhDen.SelectedDate,
+                GpaTu = ChuyenSangSo(txtGpaTu.Text),
+                GpaDen = ChuyenSangSo(txtGpaDen.Text)
+            };
 
-            dgSinhVien.ItemsSource = _sinhVienRepo.Tim(tuKhoa, lopIdLoc);
+            dgSinhVien.ItemsSource = _sinhVienRepo.TimNangCao(boLoc);
         }
 
-        private void txtTuKhoa_TextChanged(object sender, TextChangedEventArgs e)
+        // Dòng đầu tiên trong combo Khoa là "-- Tất cả các khoa --", coi như không lọc
+        private string LayGiaTriKhoaDangChon()
+        {
+            if (cboLocKhoa.SelectedIndex <= 0) return null;
+            return cboLocKhoa.SelectedItem as string;
+        }
+
+        // Dòng đầu tiên (ComboBoxItem mặc định, không phải Content thật) coi như không lọc
+        private string LayNoiDungComboBoxItem(ComboBox combo)
+        {
+            if (combo.SelectedIndex <= 0) return null;
+            return (string)((ComboBoxItem)combo.SelectedItem).Content;
+        }
+
+        // Đổi chuỗi người dùng gõ (ô GPA) sang số, gõ sai định dạng thì coi như bỏ trống
+        // (không lọc theo tiêu chí đó) thay vì báo lỗi làm gián đoạn việc gõ.
+        private double? ChuyenSangSo(string text)
+        {
+            if (double.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out double ketQua))
+                return ketQua;
+            return null;
+        }
+
+        // 2 handler dùng chung cho mọi ô lọc (tách riêng vì TextBox.TextChanged và
+        // ComboBox/DatePicker.SelectionChanged có kiểu EventArgs khác nhau),
+        // hễ đổi tiêu chí nào là lọc lại ngay.
+        private void BoLoc_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_dangKhoiTao) TaiDuLieu();
         }
 
-        private void cboLocLop_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void BoLoc_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!_dangKhoiTao) TaiDuLieu();
         }
 
-        private void btnLamMoi_Click(object sender, RoutedEventArgs e)
+        private void btnXoaLoc_Click(object sender, RoutedEventArgs e)
         {
+            _dangKhoiTao = true;
+
             txtTuKhoa.Text = string.Empty;
-            TaiDanhSachLop();
+            cboLocLop.SelectedIndex = 0;
+            cboLocKhoa.SelectedIndex = 0;
+            cboLocGioiTinh.SelectedIndex = 0;
+            cboLocTrangThai.SelectedIndex = 0;
+            dpNgaySinhTu.SelectedDate = null;
+            dpNgaySinhDen.SelectedDate = null;
+            txtGpaTu.Text = string.Empty;
+            txtGpaDen.Text = string.Empty;
+
+            _dangKhoiTao = false;
             TaiDuLieu();
         }
 
@@ -82,8 +151,8 @@ namespace QuanLySinhVien.Views
 
         private void SuaSinhVienDangChon()
         {
-            var sinhVienDangChon = dgSinhVien.SelectedItem as SinhVien;
-            if (sinhVienDangChon == null)
+            var dongDangChon = dgSinhVien.SelectedItem as SinhVienHienThi;
+            if (dongDangChon == null)
             {
                 MessageBox.Show("Vui lòng chọn 1 sinh viên cần sửa.", "Thông báo",
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -91,7 +160,7 @@ namespace QuanLySinhVien.Views
             }
 
             // Lấy lại bản ghi mới nhất từ DB (kèm Lop, CaHoc) để tránh sửa trên dữ liệu cũ
-            var sinhVien = _sinhVienRepo.LayTheoId(sinhVienDangChon.SinhVienId);
+            var sinhVien = _sinhVienRepo.LayTheoId(dongDangChon.SinhVienId);
 
             var cuaSo = new ThemSuaSinhVienWindow(sinhVien) { Owner = Window.GetWindow(this) };
             if (cuaSo.ShowDialog() == true)
@@ -102,8 +171,8 @@ namespace QuanLySinhVien.Views
 
         private void btnXoa_Click(object sender, RoutedEventArgs e)
         {
-            var sinhVienDangChon = dgSinhVien.SelectedItem as SinhVien;
-            if (sinhVienDangChon == null)
+            var dongDangChon = dgSinhVien.SelectedItem as SinhVienHienThi;
+            if (dongDangChon == null)
             {
                 MessageBox.Show("Vui lòng chọn 1 sinh viên cần xóa.", "Thông báo",
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -111,13 +180,13 @@ namespace QuanLySinhVien.Views
             }
 
             var xacNhan = MessageBox.Show(
-                $"Bạn có chắc muốn xóa sinh viên \"{sinhVienDangChon.HoTen}\" ({sinhVienDangChon.MaSV})?",
+                $"Bạn có chắc muốn xóa sinh viên \"{dongDangChon.HoTen}\" ({dongDangChon.MaSV})?",
                 "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (xacNhan != MessageBoxResult.Yes)
                 return;
 
-            _sinhVienRepo.Xoa(sinhVienDangChon.SinhVienId);
+            _sinhVienRepo.Xoa(dongDangChon.SinhVienId);
             TaiDuLieu();
         }
     }

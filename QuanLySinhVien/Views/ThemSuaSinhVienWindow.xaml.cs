@@ -34,6 +34,7 @@ namespace QuanLySinhVien.Views
                 Title = "Thêm sinh viên mới";
                 dpNgaySinh.SelectedDate = DateTime.Now.AddYears(-18);
                 cboGioiTinh.SelectedIndex = 0;
+                cboTrangThai.SelectedIndex = 0;
             }
         }
 
@@ -64,6 +65,15 @@ namespace QuanLySinhVien.Views
 
             cboLop.SelectedValue = _sinhVienDangSua.LopId;
             cboCaHoc.SelectedValue = _sinhVienDangSua.CaHocId;
+
+            foreach (ComboBoxItem item in cboTrangThai.Items)
+            {
+                if ((string)item.Content == _sinhVienDangSua.TrangThai)
+                {
+                    cboTrangThai.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void btnLuu_Click(object sender, RoutedEventArgs e)
@@ -108,6 +118,7 @@ namespace QuanLySinhVien.Views
                     _sinhVienDangSua.Email = txtEmail.Text.Trim();
                     _sinhVienDangSua.LopId = (int?)cboLop.SelectedValue;
                     _sinhVienDangSua.CaHocId = (int?)cboCaHoc.SelectedValue;
+                    _sinhVienDangSua.TrangThai = (string)((ComboBoxItem)cboTrangThai.SelectedItem).Content;
 
                     _sinhVienRepo.Sua(_sinhVienDangSua);
                 }
@@ -134,7 +145,8 @@ namespace QuanLySinhVien.Views
                 SoDienThoai = txtSoDienThoai.Text.Trim(),
                 Email = txtEmail.Text.Trim(),
                 LopId = (int?)cboLop.SelectedValue,
-                CaHocId = (int?)cboCaHoc.SelectedValue
+                CaHocId = (int?)cboCaHoc.SelectedValue,
+                TrangThai = (string)((ComboBoxItem)cboTrangThai.SelectedItem).Content
             };
         }
 
@@ -159,6 +171,11 @@ namespace QuanLySinhVien.Views
             if (cboGioiTinh.SelectedItem == null)
             {
                 return BaoLoi("Vui lòng chọn giới tính.");
+            }
+
+            if (cboTrangThai.SelectedItem == null)
+            {
+                return BaoLoi("Vui lòng chọn trạng thái học tập.");
             }
 
             if (!string.IsNullOrWhiteSpace(txtEmail.Text) &&

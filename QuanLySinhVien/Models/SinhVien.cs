@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace QuanLySinhVien.Models
 {
@@ -27,6 +28,10 @@ namespace QuanLySinhVien.Models
 
         public string Email { get; set; }
 
+        // Trạng thái học tập hiện tại: "Đang học" / "Bảo lưu" / "Tốt nghiệp".
+        // Lưu chuỗi cho đơn giản, giống cách làm với GioiTinh ở trên.
+        public string TrangThai { get; set; } = "Đang học";
+
         // --- Khóa ngoại tới Lớp ---
         // Cho phép null vì lúc mới thêm sinh viên có thể chưa xếp lớp ngay
         public int? LopId { get; set; }
@@ -35,5 +40,8 @@ namespace QuanLySinhVien.Models
         // --- Khóa ngoại tới Ca học ---
         public int? CaHocId { get; set; }
         public CaHoc CaHoc { get; set; }
+
+        // 1 sinh viên có nhiều dòng điểm, mỗi dòng ứng với 1 môn học
+        public List<DiemSo> DanhSachDiem { get; set; } = new List<DiemSo>();
     }
 }

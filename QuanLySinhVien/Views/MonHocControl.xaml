@@ -1,4 +1,4 @@
-<UserControl x:Class="QuanLySinhVien.Views.LopHocControl"
+<UserControl x:Class="QuanLySinhVien.Views.MonHocControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid Margin="8">
@@ -18,7 +18,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" x:Name="txtTuKhoa"
-                     ToolTip="Tìm theo mã lớp hoặc tên lớp"
+                     ToolTip="Tìm theo mã môn hoặc tên môn"
                      TextChanged="txtTuKhoa_TextChanged" />
 
             <Button Grid.Column="2" Content="Làm mới" Style="{StaticResource NutPhu}"
@@ -31,20 +31,18 @@
                     Click="btnXoa_Click" />
         </Grid>
 
-        <DataGrid Grid.Row="1" x:Name="dgLop"
+        <DataGrid Grid.Row="1" x:Name="dgMonHoc"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   CanUserAddRows="False"
                   AlternatingRowBackground="#F7F9FC"
-                  MouseDoubleClick="dgLop_MouseDoubleClick">
+                  MouseDoubleClick="dgMonHoc_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã lớp" Binding="{Binding MaLop}" Width="120" />
-                <DataGridTextColumn Header="Tên lớp" Binding="{Binding TenLop}" Width="180" />
-                <DataGridTextColumn Header="Khoa" Binding="{Binding Khoa}" Width="160" />
-                <DataGridTextColumn Header="Khóa học" Binding="{Binding KhoaHoc}" Width="100" />
-                <DataGridTextColumn Header="Sĩ số tối đa" Binding="{Binding SiSoToiDa}" Width="100" />
+                <DataGridTextColumn Header="Mã môn" Binding="{Binding MaMonHoc}" Width="120" />
+                <DataGridTextColumn Header="Tên môn học" Binding="{Binding TenMonHoc}" Width="240" />
+                <DataGridTextColumn Header="Số tín chỉ" Binding="{Binding SoTinChi}" Width="100" />
                 <DataGridTextColumn Header="Ghi chú" Binding="{Binding GhiChu}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>

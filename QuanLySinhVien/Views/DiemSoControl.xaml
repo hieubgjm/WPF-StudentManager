@@ -1,0 +1,120 @@
+<UserControl x:Class="QuanLySinhVien.Views.DiemSoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320" />
+            <ColumnDefinition Width="12" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Cột trái: chọn 1 sinh viên để xem/nhập điểm -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Chọn sinh viên" FontWeight="SemiBold" Margin="0,0,0,8" />
+
+            <Grid Grid.Row="1" Margin="0,0,0,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" x:Name="txtTuKhoaSV"
+                         ToolTip="Tìm theo mã SV hoặc họ tên"
+                         Margin="0,0,0,8"
+                         TextChanged="BoLoc_TextChanged" />
+                <ComboBox Grid.Row="1" x:Name="cboLocLop"
+                          DisplayMemberPath="TenLop" SelectedValuePath="LopId"
+                          SelectionChanged="BoLoc_SelectionChanged" />
+            </Grid>
+
+            <DataGrid Grid.Row="2" x:Name="dgSinhVien"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"
+                      CanUserAddRows="False"
+                      AlternatingRowBackground="#F7F9FC"
+                      SelectionChanged="dgSinhVien_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã SV" Binding="{Binding MaSV}" Width="80" />
+                    <DataGridTextColumn Header="Họ và tên" Binding="{Binding HoTen}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Cột phải: thông tin sinh viên đang chọn + bảng điểm từng môn -->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Khi chưa chọn sinh viên nào -->
+            <TextBlock Grid.Row="0" x:Name="lblChuaChonSV"
+                       Text="Vui lòng chọn 1 sinh viên ở danh sách bên trái để xem bảng điểm."
+                       Foreground="Gray" Margin="0,0,0,8" />
+
+            <!-- Thông tin sinh viên + GPA/Xếp loại, chỉ hiện khi đã chọn sinh viên -->
+            <Border Grid.Row="0" x:Name="pnlThongTinSV" Background="White" CornerRadius="8" Padding="14"
+                    BorderBrush="#E0E4EC" BorderThickness="1" Margin="0,0,0,10" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock x:Name="lblHoTenSV" FontWeight="SemiBold" FontSize="15" />
+                        <TextBlock x:Name="lblThongTinPhuSV" Foreground="Gray" Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="20,0" HorizontalAlignment="Center">
+                        <TextBlock Text="GPA" Foreground="Gray" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="lblGpa" FontSize="22" FontWeight="Bold"
+                                   Foreground="{StaticResource MauChinh}" HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                        <TextBlock Text="Xếp loại" Foreground="Gray" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="lblXepLoai" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" x:Name="pnlNutDiem" Margin="0,0,0,8" Visibility="Collapsed">
+                <TextBlock Text="Bảng điểm từng môn" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Thêm điểm" Style="{StaticResource NutChinh}" Margin="0,0,8,0"
+                            Click="btnThemDiem_Click" />
+                    <Button Content="Sửa điểm" Style="{StaticResource NutChinh}" Margin="0,0,8,0"
+                            Click="btnSuaDiem_Click" />
+                    <Button Content="Xóa điểm" Style="{StaticResource NutXoa}" Click="btnXoaDiem_Click" />
+                </StackPanel>
+            </Grid>
+
+            <DataGrid Grid.Row="2" x:Name="dgDiem"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"
+                      CanUserAddRows="False"
+                      AlternatingRowBackground="#F7F9FC"
+                      MouseDoubleClick="dgDiem_MouseDoubleClick">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Môn học" Binding="{Binding MonHoc.TenMonHoc}" Width="*" />
+                    <DataGridTextColumn Header="Tín chỉ" Binding="{Binding MonHoc.SoTinChi}" Width="70" />
+                    <DataGridTextColumn Header="Giữa kỳ" Binding="{Binding DiemGiuaKy, StringFormat=N1}" Width="80" />
+                    <DataGridTextColumn Header="Cuối kỳ" Binding="{Binding DiemCuoiKy, StringFormat=N1}" Width="80" />
+                    <DataGridTextColumn Header="Tổng kết" Binding="{Binding DiemTongKet, StringFormat=N2}" Width="90" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

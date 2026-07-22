@@ -1,8 +1,8 @@
-<Window x:Class="QuanLySinhVien.Views.ThemSuaLopWindow"
+<Window x:Class="QuanLySinhVien.Views.ThemSuaMonHocWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Thêm lớp học"
-        Height="470" Width="420"
+        Title="Thêm môn học"
+        Height="420" Width="420"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
     <Grid Margin="20">
@@ -12,20 +12,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Mã lớp" Margin="0,0,0,4" />
-            <TextBox x:Name="txtMaLop" Margin="0,0,0,12" />
+            <TextBlock Text="Mã môn học" Margin="0,0,0,4" />
+            <TextBox x:Name="txtMaMonHoc" Margin="0,0,0,12" />
 
-            <TextBlock Text="Tên lớp" Margin="0,0,0,4" />
-            <TextBox x:Name="txtTenLop" Margin="0,0,0,12" />
+            <TextBlock Text="Tên môn học" Margin="0,0,0,4" />
+            <TextBox x:Name="txtTenMonHoc" Margin="0,0,0,12" />
 
-            <TextBlock Text="Khoa" Margin="0,0,0,4" />
-            <TextBox x:Name="txtKhoa" Margin="0,0,0,12" />
-
-            <TextBlock Text="Khóa học (VD: 2021-2025)" Margin="0,0,0,4" />
-            <TextBox x:Name="txtKhoaHoc" Margin="0,0,0,12" />
-
-            <TextBlock Text="Sĩ số tối đa" Margin="0,0,0,4" />
-            <TextBox x:Name="txtSiSoToiDa" Margin="0,0,0,12" />
+            <TextBlock Text="Số tín chỉ" Margin="0,0,0,4" />
+            <TextBox x:Name="txtSoTinChi" Margin="0,0,0,12" />
 
             <TextBlock Text="Ghi chú" Margin="0,0,0,4" />
             <TextBox x:Name="txtGhiChu" Height="60" TextWrapping="Wrap" AcceptsReturn="True" />

@@ -24,6 +24,7 @@ namespace QuanLySinhVien.Views
                 txtMaLop.Text = _lopDangSua.MaLop;
                 txtTenLop.Text = _lopDangSua.TenLop;
                 txtKhoa.Text = _lopDangSua.Khoa;
+                txtKhoaHoc.Text = _lopDangSua.KhoaHoc;
                 txtSiSoToiDa.Text = _lopDangSua.SiSoToiDa.ToString();
                 txtGhiChu.Text = _lopDangSua.GhiChu;
             }
@@ -48,6 +49,7 @@ namespace QuanLySinhVien.Views
                         MaLop = txtMaLop.Text.Trim(),
                         TenLop = txtTenLop.Text.Trim(),
                         Khoa = txtKhoa.Text.Trim(),
+                        KhoaHoc = txtKhoaHoc.Text.Trim(),
                         SiSoToiDa = siSoToiDa,
                         GhiChu = txtGhiChu.Text.Trim()
                     };
@@ -58,6 +60,7 @@ namespace QuanLySinhVien.Views
                     _lopDangSua.MaLop = txtMaLop.Text.Trim();
                     _lopDangSua.TenLop = txtTenLop.Text.Trim();
                     _lopDangSua.Khoa = txtKhoa.Text.Trim();
+                    _lopDangSua.KhoaHoc = txtKhoaHoc.Text.Trim();
                     _lopDangSua.SiSoToiDa = siSoToiDa;
                     _lopDangSua.GhiChu = txtGhiChu.Text.Trim();
                     _lopRepo.Sua(_lopDangSua);

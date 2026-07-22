@@ -4,41 +4,106 @@
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Hàng công cụ: tìm kiếm, lọc theo lớp, các nút thao tác -->
+        <!-- Hàng tiêu đề + các nút thao tác chính -->
         <Grid Grid.Row="0" Margin="0,0,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="240" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <TextBlock Text="Danh sách sinh viên" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
 
-            <TextBox Grid.Column="0" x:Name="txtTuKhoa"
-                     ToolTip="Tìm theo mã SV hoặc họ tên"
-                     TextChanged="txtTuKhoa_TextChanged" />
-
-            <ComboBox Grid.Column="2" x:Name="cboLocLop"
-                      DisplayMemberPath="TenLop" SelectedValuePath="LopId"
-                      SelectionChanged="cboLocLop_SelectionChanged" />
-
-            <Button Grid.Column="4" Content="Làm mới" Style="{StaticResource NutPhu}"
-                    Margin="0,0,8,0" Click="btnLamMoi_Click" />
-            <Button Grid.Column="5" Content="Thêm" Style="{StaticResource NutChinh}"
-                    Margin="0,0,8,0" Click="btnThem_Click" />
-            <Button Grid.Column="6" Content="Sửa" Style="{StaticResource NutChinh}"
-                    Margin="0,0,8,0" Click="btnSua_Click" />
-            <Button Grid.Column="7" Content="Xóa" Style="{StaticResource NutXoa}"
-                    Click="btnXoa_Click" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Thêm" Style="{StaticResource NutChinh}" Margin="0,0,8,0" Click="btnThem_Click" />
+                <Button Content="Sửa" Style="{StaticResource NutChinh}" Margin="0,0,8,0" Click="btnSua_Click" />
+                <Button Content="Xóa" Style="{StaticResource NutXoa}" Click="btnXoa_Click" />
+            </StackPanel>
         </Grid>
 
-        <DataGrid Grid.Row="1" x:Name="dgSinhVien"
+        <!-- Khu vực bộ lọc/tìm kiếm nâng cao: gõ/chọn tiêu chí nào thì lọc theo tiêu chí đó,
+             để trống nghĩa là không lọc theo tiêu chí đó. -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="12" Margin="0,0,0,10"
+                BorderBrush="#E0E4EC" BorderThickness="1">
+            <StackPanel>
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="txtTuKhoa"
+                             ToolTip="Tìm theo mã SV hoặc họ tên"
+                             TextChanged="BoLoc_TextChanged" />
+
+                    <ComboBox Grid.Column="2" x:Name="cboLocLop"
+                              ToolTip="Lọc theo lớp"
+                              DisplayMemberPath="TenLop" SelectedValuePath="LopId"
+                              SelectionChanged="BoLoc_SelectionChanged" />
+
+                    <ComboBox Grid.Column="4" x:Name="cboLocKhoa"
+                              ToolTip="Lọc theo khoa"
+                              SelectionChanged="BoLoc_SelectionChanged" />
+
+                    <ComboBox Grid.Column="6" x:Name="cboLocGioiTinh"
+                              ToolTip="Lọc theo giới tính"
+                              SelectionChanged="BoLoc_SelectionChanged">
+                        <ComboBoxItem Content="-- Giới tính --" />
+                        <ComboBoxItem Content="Nam" />
+                        <ComboBoxItem Content="Nữ" />
+                    </ComboBox>
+
+                    <ComboBox Grid.Column="8" x:Name="cboLocTrangThai"
+                              ToolTip="Lọc theo trạng thái học tập"
+                              SelectionChanged="BoLoc_SelectionChanged">
+                        <ComboBoxItem Content="-- Trạng thái --" />
+                        <ComboBoxItem Content="Đang học" />
+                        <ComboBoxItem Content="Bảo lưu" />
+                        <ComboBoxItem Content="Tốt nghiệp" />
+                    </ComboBox>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Ngày sinh từ" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <DatePicker Grid.Column="1" x:Name="dpNgaySinhTu" Height="32" SelectedDateChanged="BoLoc_SelectionChanged" />
+
+                    <TextBlock Grid.Column="3" Text="đến" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <DatePicker Grid.Column="4" x:Name="dpNgaySinhDen" Height="32" SelectedDateChanged="BoLoc_SelectionChanged" />
+
+                    <TextBlock Grid.Column="6" Text="GPA từ" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBox Grid.Column="7" x:Name="txtGpaTu" ToolTip="GPA nhỏ nhất (0-10)" TextChanged="BoLoc_TextChanged" />
+
+                    <TextBlock Grid.Column="9" Text="đến" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBox Grid.Column="10" x:Name="txtGpaDen" ToolTip="GPA lớn nhất (0-10)" TextChanged="BoLoc_TextChanged" />
+
+                    <Button Grid.Column="12" Content="Xóa lọc" Style="{StaticResource NutPhu}"
+                            Click="btnXoaLoc_Click" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" x:Name="dgSinhVien"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   SelectionMode="Single"
@@ -47,13 +112,16 @@
                   AlternatingRowBackground="#F7F9FC"
                   MouseDoubleClick="dgSinhVien_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã SV" Binding="{Binding MaSV}" Width="90" />
-                <DataGridTextColumn Header="Họ và tên" Binding="{Binding HoTen}" Width="180" />
-                <DataGridTextColumn Header="Ngày sinh" Binding="{Binding NgaySinh, StringFormat=dd/MM/yyyy}" Width="90" />
-                <DataGridTextColumn Header="Giới tính" Binding="{Binding GioiTinh}" Width="70" />
-                <DataGridTextColumn Header="Lớp" Binding="{Binding Lop.TenLop}" Width="130" />
-                <DataGridTextColumn Header="Ca học" Binding="{Binding CaHoc.TenCa}" Width="100" />
-                <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="100" />
+                <DataGridTextColumn Header="Mã SV" Binding="{Binding MaSV}" Width="80" />
+                <DataGridTextColumn Header="Họ và tên" Binding="{Binding HoTen}" Width="160" />
+                <DataGridTextColumn Header="Ngày sinh" Binding="{Binding NgaySinh, StringFormat=dd/MM/yyyy}" Width="85" />
+                <DataGridTextColumn Header="Giới tính" Binding="{Binding GioiTinh}" Width="65" />
+                <DataGridTextColumn Header="Lớp" Binding="{Binding TenLop}" Width="110" />
+                <DataGridTextColumn Header="Khoa" Binding="{Binding Khoa}" Width="130" />
+                <DataGridTextColumn Header="Trạng thái" Binding="{Binding TrangThai}" Width="90" />
+                <DataGridTextColumn Header="GPA" Binding="{Binding Gpa, StringFormat=N2, TargetNullValue='--'}" Width="60" />
+                <DataGridTextColumn Header="Xếp loại" Binding="{Binding XepLoai}" Width="90" />
+                <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="95" />
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
