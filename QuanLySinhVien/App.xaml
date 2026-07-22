@@ -1,0 +1,83 @@
+<Application x:Class="QuanLySinhVien.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Mình không dùng StartupUri ở đây vì cần chạy code kiểm tra/tạo database
+        trước khi hiện màn hình đăng nhập (xem hàm OnStartup trong App.xaml.cs).
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- Bảng màu dùng chung cho cả app, để chỗ này cho dễ đổi sau này -->
+            <SolidColorBrush x:Key="MauChinh" Color="#2E6BE6" />
+            <SolidColorBrush x:Key="MauChinhDam" Color="#1F4FBF" />
+            <SolidColorBrush x:Key="MauNen" Color="#F4F6FB" />
+            <SolidColorBrush x:Key="MauNguyHiem" Color="#E64A4A" />
+            <SolidColorBrush x:Key="MauChu" Color="#222833" />
+
+            <!-- Style dùng chung cho nút bấm chính (Thêm, Lưu, Đăng nhập...) -->
+            <Style x:Key="NutChinh" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource MauChinh}" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource MauChinhDam}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Nút phụ, màu trắng viền xám - dùng cho Hủy, Làm mới... -->
+            <Style x:Key="NutPhu" TargetType="Button" BasedOn="{StaticResource NutChinh}">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="Foreground" Value="{StaticResource MauChu}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="#D5D9E2" />
+            </Style>
+
+            <!-- Nút nguy hiểm - dùng cho Xóa -->
+            <Style x:Key="NutXoa" TargetType="Button" BasedOn="{StaticResource NutChinh}">
+                <Setter Property="Background" Value="{StaticResource MauNguyHiem}" />
+            </Style>
+
+            <!-- Style TextBox cho đồng bộ toàn bộ form -->
+            <Style TargetType="TextBox">
+                <Setter Property="Padding" Value="6,6" />
+                <Setter Property="BorderBrush" Value="#D5D9E2" />
+                <Setter Property="Height" Value="32" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+
+            <Style TargetType="PasswordBox">
+                <Setter Property="Padding" Value="6,6" />
+                <Setter Property="BorderBrush" Value="#D5D9E2" />
+                <Setter Property="Height" Value="32" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+
+            <Style TargetType="ComboBox">
+                <Setter Property="Padding" Value="6,4" />
+                <Setter Property="Height" Value="32" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

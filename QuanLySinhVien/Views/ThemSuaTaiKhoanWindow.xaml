@@ -1,0 +1,53 @@
+<Window x:Class="QuanLySinhVien.Views.ThemSuaTaiKhoanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thêm tài khoản"
+        Height="460" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Tên đăng nhập" Margin="0,0,0,4" />
+            <TextBox x:Name="txtTenDangNhap" Margin="0,0,0,12" />
+
+            <TextBlock Text="Họ tên hiển thị" Margin="0,0,0,4" />
+            <TextBox x:Name="txtHoTen" Margin="0,0,0,12" />
+
+            <TextBlock Text="Vai trò" Margin="0,0,0,4" />
+            <ComboBox x:Name="cboVaiTro" Margin="0,0,0,12">
+                <ComboBoxItem Content="NhanVien" />
+                <ComboBoxItem Content="Admin" />
+            </ComboBox>
+
+            <!-- Chỉ hiện khi thêm mới, sửa tài khoản thì đặt lại mật khẩu ở màn hình danh sách -->
+            <StackPanel x:Name="pnlMatKhau">
+                <TextBlock Text="Mật khẩu" Margin="0,0,0,4" />
+                <PasswordBox x:Name="txtMatKhau" Margin="0,0,0,12" />
+
+                <TextBlock Text="Nhập lại mật khẩu" Margin="0,0,0,4" />
+                <PasswordBox x:Name="txtNhapLaiMatKhau" Margin="0,0,0,12" />
+            </StackPanel>
+
+            <CheckBox x:Name="chkDangHoatDong" Content="Tài khoản đang hoạt động"
+                      IsChecked="True" Margin="0,0,0,4" />
+
+            <TextBlock x:Name="lblThongBao"
+                       Foreground="{StaticResource MauNguyHiem}"
+                       TextWrapping="Wrap"
+                       Margin="0,10,0,0"
+                       Visibility="Collapsed" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Hủy" Style="{StaticResource NutPhu}" Width="100" Margin="0,0,8,0"
+                    Click="btnHuy_Click" />
+            <Button Content="Lưu" Style="{StaticResource NutChinh}" Width="100"
+                    Click="btnLuu_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

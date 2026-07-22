@@ -1,0 +1,61 @@
+<UserControl x:Class="QuanLySinhVien.Views.SinhVienControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Hàng công cụ: tìm kiếm, lọc theo lớp, các nút thao tác -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" x:Name="txtTuKhoa"
+                     ToolTip="Tìm theo mã SV hoặc họ tên"
+                     TextChanged="txtTuKhoa_TextChanged" />
+
+            <ComboBox Grid.Column="2" x:Name="cboLocLop"
+                      DisplayMemberPath="TenLop" SelectedValuePath="LopId"
+                      SelectionChanged="cboLocLop_SelectionChanged" />
+
+            <Button Grid.Column="4" Content="Làm mới" Style="{StaticResource NutPhu}"
+                    Margin="0,0,8,0" Click="btnLamMoi_Click" />
+            <Button Grid.Column="5" Content="Thêm" Style="{StaticResource NutChinh}"
+                    Margin="0,0,8,0" Click="btnThem_Click" />
+            <Button Grid.Column="6" Content="Sửa" Style="{StaticResource NutChinh}"
+                    Margin="0,0,8,0" Click="btnSua_Click" />
+            <Button Grid.Column="7" Content="Xóa" Style="{StaticResource NutXoa}"
+                    Click="btnXoa_Click" />
+        </Grid>
+
+        <DataGrid Grid.Row="1" x:Name="dgSinhVien"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  CanUserAddRows="False"
+                  AlternatingRowBackground="#F7F9FC"
+                  MouseDoubleClick="dgSinhVien_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã SV" Binding="{Binding MaSV}" Width="90" />
+                <DataGridTextColumn Header="Họ và tên" Binding="{Binding HoTen}" Width="180" />
+                <DataGridTextColumn Header="Ngày sinh" Binding="{Binding NgaySinh, StringFormat=dd/MM/yyyy}" Width="90" />
+                <DataGridTextColumn Header="Giới tính" Binding="{Binding GioiTinh}" Width="70" />
+                <DataGridTextColumn Header="Lớp" Binding="{Binding Lop.TenLop}" Width="130" />
+                <DataGridTextColumn Header="Ca học" Binding="{Binding CaHoc.TenCa}" Width="100" />
+                <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="100" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
