@@ -66,8 +66,8 @@
                 </Border>
                 <Border Style="{StaticResource TheSoLieu}">
                     <StackPanel>
-                        <TextBlock Text="Tổng số ca học" Foreground="Gray" />
-                        <TextBlock x:Name="lblTongCaHoc" Style="{StaticResource SoLieuLon}" />
+                        <TextBlock Text="Tổng lượt đăng ký môn" Foreground="Gray" />
+                        <TextBlock x:Name="lblTongDangKy" Style="{StaticResource SoLieuLon}" />
                     </StackPanel>
                 </Border>
             </UniformGrid>

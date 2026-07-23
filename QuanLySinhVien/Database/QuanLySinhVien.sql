@@ -12,11 +12,11 @@
 
     LƯU Ý QUAN TRỌNG: EnsureCreated() chỉ tạo database khi nó CHƯA
     tồn tại. Nếu máy bạn đã từng chạy chương trình trước khi có các
-    cột/bảng mới (SinhViens.TrangThai, Lops.KhoaHoc, MonHocs, DiemSos)
-    thì EnsureCreated() sẽ KHÔNG tự thêm các cột/bảng này vào database
-    cũ. Cách đơn giản nhất khi đang phát triển: xóa hẳn database
-    QuanLySinhVienDB đi rồi chạy lại chương trình để nó tự tạo mới
-    theo đúng cấu trúc hiện tại.
+    cột/bảng mới (SinhViens.TrangThai, Lops.KhoaHoc, MonHocs, DiemSos,
+    DangKyMonHocs) thì EnsureCreated() sẽ KHÔNG tự thêm/xóa các cột/bảng
+    này trong database cũ. Cách đơn giản nhất khi đang phát triển: xóa
+    hẳn database QuanLySinhVienDB đi rồi chạy lại chương trình để nó tự
+    tạo mới theo đúng cấu trúc hiện tại.
 */
 
 CREATE DATABASE QuanLySinhVienDB;
@@ -37,15 +37,6 @@ CREATE TABLE Lops (
 );
 GO
 
-CREATE TABLE CaHocs (
-    CaHocId      INT IDENTITY(1,1) PRIMARY KEY,
-    TenCa        NVARCHAR(MAX) NULL,
-    GioBatDau    TIME NOT NULL,
-    GioKetThuc   TIME NOT NULL,
-    GhiChu       NVARCHAR(MAX) NULL
-);
-GO
-
 CREATE TABLE SinhViens (
     SinhVienId    INT IDENTITY(1,1) PRIMARY KEY,
     MaSV          NVARCHAR(450) NOT NULL,
@@ -57,10 +48,8 @@ CREATE TABLE SinhViens (
     Email         NVARCHAR(MAX) NULL,
     TrangThai     NVARCHAR(MAX) NULL, -- "Đang học" / "Bảo lưu" / "Tốt nghiệp"
     LopId         INT NULL,
-    CaHocId       INT NULL,
     CONSTRAINT UQ_SinhViens_MaSV UNIQUE (MaSV),
-    CONSTRAINT FK_SinhViens_Lops FOREIGN KEY (LopId) REFERENCES Lops(LopId),
-    CONSTRAINT FK_SinhViens_CaHocs FOREIGN KEY (CaHocId) REFERENCES CaHocs(CaHocId)
+    CONSTRAINT FK_SinhViens_Lops FOREIGN KEY (LopId) REFERENCES Lops(LopId)
 );
 GO
 
@@ -71,6 +60,16 @@ CREATE TABLE MonHocs (
     SoTinChi     INT NOT NULL,
     GhiChu       NVARCHAR(MAX) NULL,
     CONSTRAINT UQ_MonHocs_MaMonHoc UNIQUE (MaMonHoc)
+);
+GO
+
+CREATE TABLE DangKyMonHocs (
+    DangKyMonHocId INT IDENTITY(1,1) PRIMARY KEY,
+    SinhVienId     INT NOT NULL,
+    MonHocId       INT NOT NULL,
+    CONSTRAINT UQ_DangKyMonHocs_SinhVien_MonHoc UNIQUE (SinhVienId, MonHocId),
+    CONSTRAINT FK_DangKyMonHocs_SinhViens FOREIGN KEY (SinhVienId) REFERENCES SinhViens(SinhVienId) ON DELETE CASCADE,
+    CONSTRAINT FK_DangKyMonHocs_MonHocs FOREIGN KEY (MonHocId) REFERENCES MonHocs(MonHocId)
 );
 GO
 

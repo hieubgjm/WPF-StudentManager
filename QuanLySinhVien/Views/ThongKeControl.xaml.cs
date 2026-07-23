@@ -13,7 +13,7 @@ namespace QuanLySinhVien.Views
     {
         private readonly SinhVienRepository _sinhVienRepo = new SinhVienRepository();
         private readonly LopRepository _lopRepo = new LopRepository();
-        private readonly CaHocRepository _caHocRepo = new CaHocRepository();
+        private readonly DangKyMonHocRepository _dangKyMonHocRepo = new DangKyMonHocRepository();
 
         public ThongKeControl()
         {
@@ -24,11 +24,10 @@ namespace QuanLySinhVien.Views
         private void TaiDuLieu()
         {
             var danhSachLop = _lopRepo.LayTatCa();
-            var danhSachCaHoc = _caHocRepo.LayTatCa();
 
             lblTongSinhVien.Text = _sinhVienRepo.Tim(tuKhoa: null, lopIdLoc: 0).Count.ToString();
             lblTongLop.Text = danhSachLop.Count.ToString();
-            lblTongCaHoc.Text = danhSachCaHoc.Count.ToString();
+            lblTongDangKy.Text = _dangKyMonHocRepo.DemTongSoDangKy().ToString();
 
             HienThiTheoGioiTinh();
             HienThiTheoTrangThai();

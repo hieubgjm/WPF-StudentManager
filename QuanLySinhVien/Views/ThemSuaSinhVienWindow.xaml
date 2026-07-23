@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Thêm sinh viên"
-        Height="620" Width="480"
+        Height="740" Width="480"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
     <Grid Margin="20">
@@ -61,23 +61,8 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Margin="0,0,0,4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="12" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="Lớp" Margin="0,0,0,4" />
-                    <ComboBox x:Name="cboLop" DisplayMemberPath="TenLop" SelectedValuePath="LopId" />
-                </StackPanel>
-
-                <StackPanel Grid.Column="2">
-                    <TextBlock Text="Ca học" Margin="0,0,0,4" />
-                    <ComboBox x:Name="cboCaHoc" DisplayMemberPath="TenCa" SelectedValuePath="CaHocId" />
-                </StackPanel>
-            </Grid>
+            <TextBlock Text="Lớp" Margin="0,0,0,4" />
+            <ComboBox x:Name="cboLop" DisplayMemberPath="TenLop" SelectedValuePath="LopId" Margin="0,0,0,12" />
 
             <TextBlock Text="Trạng thái học tập" Margin="0,0,0,4" />
             <ComboBox x:Name="cboTrangThai" Margin="0,0,0,12">
@@ -85,6 +70,13 @@
                 <ComboBoxItem Content="Bảo lưu" />
                 <ComboBoxItem Content="Tốt nghiệp" />
             </ComboBox>
+
+            <TextBlock Text="Môn học đăng ký" Margin="0,0,0,4" />
+            <Border BorderBrush="#E0E4EC" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,12">
+                <ScrollViewer MaxHeight="140" VerticalScrollBarVisibility="Auto">
+                    <WrapPanel x:Name="pnlMonHoc" Orientation="Horizontal" />
+                </ScrollViewer>
+            </Border>
 
             <TextBlock x:Name="lblThongBao"
                        Foreground="{StaticResource MauNguyHiem}"

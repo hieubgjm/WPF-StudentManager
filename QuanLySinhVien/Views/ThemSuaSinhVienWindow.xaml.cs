@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +12,9 @@ namespace QuanLySinhVien.Views
     {
         private readonly SinhVienRepository _sinhVienRepo = new SinhVienRepository();
         private readonly LopRepository _lopRepo = new LopRepository();
-        private readonly CaHocRepository _caHocRepo = new CaHocRepository();
+        private readonly MonHocRepository _monHocRepo = new MonHocRepository();
+        private readonly DangKyMonHocRepository _dangKyMonHocRepo = new DangKyMonHocRepository();
+        private readonly DiemSoRepository _diemSoRepo = new DiemSoRepository();
 
         // Nếu null tức là đang Thêm mới, khác null tức là đang Sửa sinh viên này
         private readonly SinhVien _sinhVienDangSua;
@@ -22,7 +25,8 @@ namespace QuanLySinhVien.Views
 
             _sinhVienDangSua = sinhVienCanSua;
 
-            TaiDanhSachLopVaCaHoc();
+            cboLop.ItemsSource = _lopRepo.LayTatCa();
+            TaiDanhSachMonHoc();
 
             if (_sinhVienDangSua != null)
             {
@@ -38,10 +42,30 @@ namespace QuanLySinhVien.Views
             }
         }
 
-        private void TaiDanhSachLopVaCaHoc()
+        // Đổ danh sách môn học ra dạng checkbox, tick sẵn những môn sinh viên đã đăng ký.
+        // Môn nào sinh viên đã có điểm rồi thì khóa checkbox lại, không cho bỏ đăng ký nữa.
+        private void TaiDanhSachMonHoc()
         {
-            cboLop.ItemsSource = _lopRepo.LayTatCa();
-            cboCaHoc.ItemsSource = _caHocRepo.LayTatCa();
+            var monHocIdDaDangKy = _sinhVienDangSua != null
+                ? _dangKyMonHocRepo.LayDanhSachMonHocIdTheoSinhVien(_sinhVienDangSua.SinhVienId)
+                : Enumerable.Empty<int>();
+
+            pnlMonHoc.Children.Clear();
+
+            foreach (var monHoc in _monHocRepo.LayTatCa())
+            {
+                bool daCoDiem = _sinhVienDangSua != null &&
+                    _diemSoRepo.DaCoDiemMonHoc(_sinhVienDangSua.SinhVienId, monHoc.MonHocId);
+
+                pnlMonHoc.Children.Add(new CheckBox
+                {
+                    Content = daCoDiem ? monHoc.TenMonHoc + " (đã có điểm)" : monHoc.TenMonHoc,
+                    Tag = monHoc.MonHocId,
+                    IsChecked = monHocIdDaDangKy.Contains(monHoc.MonHocId),
+                    IsEnabled = !daCoDiem,
+                    Margin = new Thickness(0, 0, 16, 6)
+                });
+            }
         }
 
         // Đổ dữ liệu sinh viên đang sửa lên các ô nhập liệu
@@ -64,7 +88,6 @@ namespace QuanLySinhVien.Views
             }
 
             cboLop.SelectedValue = _sinhVienDangSua.LopId;
-            cboCaHoc.SelectedValue = _sinhVienDangSua.CaHocId;
 
             foreach (ComboBoxItem item in cboTrangThai.Items)
             {
@@ -102,10 +125,13 @@ namespace QuanLySinhVien.Views
 
             try
             {
+                int sinhVienId;
+
                 if (_sinhVienDangSua == null)
                 {
                     var sinhVienMoi = TaoSinhVienTuForm();
                     _sinhVienRepo.Them(sinhVienMoi);
+                    sinhVienId = sinhVienMoi.SinhVienId;
                 }
                 else
                 {
@@ -117,11 +143,17 @@ namespace QuanLySinhVien.Views
                     _sinhVienDangSua.SoDienThoai = txtSoDienThoai.Text.Trim();
                     _sinhVienDangSua.Email = txtEmail.Text.Trim();
                     _sinhVienDangSua.LopId = (int?)cboLop.SelectedValue;
-                    _sinhVienDangSua.CaHocId = (int?)cboCaHoc.SelectedValue;
                     _sinhVienDangSua.TrangThai = (string)((ComboBoxItem)cboTrangThai.SelectedItem).Content;
 
                     _sinhVienRepo.Sua(_sinhVienDangSua);
+                    sinhVienId = _sinhVienDangSua.SinhVienId;
                 }
+
+                var monHocIdDaChon = pnlMonHoc.Children.OfType<CheckBox>()
+                    .Where(c => c.IsChecked == true)
+                    .Select(c => (int)c.Tag)
+                    .ToList();
+                _dangKyMonHocRepo.CapNhatDangKy(sinhVienId, monHocIdDaChon);
 
                 DialogResult = true;
                 Close();
@@ -145,7 +177,6 @@ namespace QuanLySinhVien.Views
                 SoDienThoai = txtSoDienThoai.Text.Trim(),
                 Email = txtEmail.Text.Trim(),
                 LopId = (int?)cboLop.SelectedValue,
-                CaHocId = (int?)cboCaHoc.SelectedValue,
                 TrangThai = (string)((ComboBoxItem)cboTrangThai.SelectedItem).Content
             };
         }

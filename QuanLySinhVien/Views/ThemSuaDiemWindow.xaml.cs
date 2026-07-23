@@ -10,7 +10,7 @@ namespace QuanLySinhVien.Views
 {
     public partial class ThemSuaDiemWindow : Window
     {
-        private readonly MonHocRepository _monHocRepo = new MonHocRepository();
+        private readonly DangKyMonHocRepository _dangKyMonHocRepo = new DangKyMonHocRepository();
         private readonly DiemSoRepository _diemSoRepo = new DiemSoRepository();
 
         private readonly int _sinhVienId;
@@ -41,12 +41,12 @@ namespace QuanLySinhVien.Views
             {
                 Title = "Nhập điểm môn học";
 
-                // Chỉ cho chọn những môn sinh viên này CHƯA có điểm, tránh nhập trùng môn
+                // Chỉ cho chọn những môn sinh viên này ĐÃ đăng ký và CHƯA có điểm, tránh nhập trùng môn
                 var maMonHocDaCo = _diemSoRepo.LayTheoSinhVien(sinhVienId)
                     .Select(d => d.MonHocId)
                     .ToHashSet();
 
-                cboMonHoc.ItemsSource = _monHocRepo.LayTatCa()
+                cboMonHoc.ItemsSource = _dangKyMonHocRepo.LayMonHocDaDangKy(sinhVienId)
                     .Where(m => !maMonHocDaCo.Contains(m.MonHocId))
                     .ToList();
             }
@@ -93,7 +93,7 @@ namespace QuanLySinhVien.Views
             diemCuoiKy = 0;
 
             if (cboMonHoc.SelectedItem == null)
-                return BaoLoi("Vui lòng chọn môn học (nếu sinh viên đã có điểm hết tất cả môn thì không còn môn nào để chọn).");
+                return BaoLoi("Vui lòng chọn môn học (nếu sinh viên chưa đăng ký môn nào, hoặc đã có điểm hết các môn đã đăng ký, thì không còn môn nào để chọn).");
 
             if (!KiemTraDiemHopLe(txtDiemGiuaKy.Text, out diemGiuaKy))
                 return BaoLoi("Điểm giữa kỳ phải là số từ 0 đến 10.");

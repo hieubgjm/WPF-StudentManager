@@ -22,10 +22,10 @@ namespace QuanLySinhVien.Data
 
         public DbSet<SinhVien> SinhViens { get; set; }
         public DbSet<Lop> Lops { get; set; }
-        public DbSet<CaHoc> CaHocs { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
         public DbSet<MonHoc> MonHocs { get; set; }
         public DbSet<DiemSo> DiemSos { get; set; }
+        public DbSet<DangKyMonHoc> DangKyMonHocs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -61,20 +61,33 @@ namespace QuanLySinhVien.Data
                 .IsUnique();
 
             // Sinh viên xóa Lớp thì không được xóa luôn sinh viên trong lớp đó (tránh mất dữ liệu),
-            // mình sẽ tự kiểm tra ở tầng Repository trước khi cho xóa Lớp/Ca học.
+            // mình sẽ tự kiểm tra ở tầng Repository trước khi cho xóa Lớp.
             modelBuilder.Entity<SinhVien>()
                 .HasOne(sv => sv.Lop)
                 .WithMany(l => l.DanhSachSinhVien)
                 .HasForeignKey(sv => sv.LopId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<SinhVien>()
-                .HasOne(sv => sv.CaHoc)
-                .WithMany(c => c.DanhSachSinhVien)
-                .HasForeignKey(sv => sv.CaHocId)
+            // Đăng ký môn học cũng là dữ liệu con phụ thuộc vào sinh viên, giống DiemSo:
+            // xóa sinh viên thì xóa cascade luôn các dòng đăng ký. Môn học vẫn là dữ liệu
+            // tham chiếu dùng chung nên không cho xóa nếu còn ai đăng ký (MonHocRepository.CoTheXoa).
+            modelBuilder.Entity<DangKyMonHoc>()
+                .HasIndex(d => new { d.SinhVienId, d.MonHocId })
+                .IsUnique();
+
+            modelBuilder.Entity<DangKyMonHoc>()
+                .HasOne(d => d.SinhVien)
+                .WithMany()
+                .HasForeignKey(d => d.SinhVienId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DangKyMonHoc>()
+                .HasOne(d => d.MonHoc)
+                .WithMany()
+                .HasForeignKey(d => d.MonHocId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Điểm là dữ liệu con phụ thuộc vào sinh viên (khác với Lớp/Ca học là dữ liệu
+            // Điểm là dữ liệu con phụ thuộc vào sinh viên (khác với Lớp là dữ liệu
             // tham chiếu), nên xóa sinh viên thì cho xóa cascade luôn toàn bộ điểm của SV đó.
             modelBuilder.Entity<DiemSo>()
                 .HasOne(d => d.SinhVien)

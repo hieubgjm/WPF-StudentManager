@@ -159,7 +159,7 @@ namespace QuanLySinhVien.Views
                 return;
             }
 
-            // Lấy lại bản ghi mới nhất từ DB (kèm Lop, CaHoc) để tránh sửa trên dữ liệu cũ
+            // Lấy lại bản ghi mới nhất từ DB (kèm Lop) để tránh sửa trên dữ liệu cũ
             var sinhVien = _sinhVienRepo.LayTheoId(dongDangChon.SinhVienId);
 
             var cuaSo = new ThemSuaSinhVienWindow(sinhVien) { Owner = Window.GetWindow(this) };

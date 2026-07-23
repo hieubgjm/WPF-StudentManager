@@ -5,7 +5,7 @@ namespace QuanLySinhVien.Models
 {
     /// <summary>
     /// Thông tin 1 sinh viên. Đây là bảng "trung tâm" của cả chương trình,
-    /// mỗi sinh viên thuộc về 1 lớp và học theo 1 ca học.
+    /// mỗi sinh viên thuộc về 1 lớp và đăng ký học 1 số môn học nhất định.
     /// </summary>
     public class SinhVien
     {
@@ -36,10 +36,6 @@ namespace QuanLySinhVien.Models
         // Cho phép null vì lúc mới thêm sinh viên có thể chưa xếp lớp ngay
         public int? LopId { get; set; }
         public Lop Lop { get; set; }
-
-        // --- Khóa ngoại tới Ca học ---
-        public int? CaHocId { get; set; }
-        public CaHoc CaHoc { get; set; }
 
         // 1 sinh viên có nhiều dòng điểm, mỗi dòng ứng với 1 môn học
         public List<DiemSo> DanhSachDiem { get; set; } = new List<DiemSo>();
