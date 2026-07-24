@@ -21,7 +21,6 @@ namespace QuanLySinhVien.Repositories
             {
                 var query = db.SinhViens
                     .Include(sv => sv.Lop)
-                    .Include(sv => sv.CaHoc)
                     .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(tuKhoa))
@@ -47,7 +46,6 @@ namespace QuanLySinhVien.Repositories
             {
                 return db.SinhViens
                     .Include(sv => sv.Lop)
-                    .Include(sv => sv.CaHoc)
                     .FirstOrDefault(sv => sv.SinhVienId == sinhVienId);
             }
         }
@@ -148,7 +146,6 @@ namespace QuanLySinhVien.Repositories
             {
                 var query = db.SinhViens
                     .Include(sv => sv.Lop)
-                    .Include(sv => sv.CaHoc)
                     .Include(sv => sv.DanhSachDiem)
                         .ThenInclude(d => d.MonHoc)
                     .AsQueryable();
@@ -209,7 +206,6 @@ namespace QuanLySinhVien.Repositories
                         Email = sv.Email,
                         TenLop = sv.Lop?.TenLop,
                         Khoa = sv.Lop?.Khoa,
-                        TenCaHoc = sv.CaHoc?.TenCa,
                         TrangThai = sv.TrangThai,
                         Gpa = gpa,
                         XepLoai = XepLoaiHelper.XepLoaiTuGpa(gpa)
@@ -329,7 +325,6 @@ namespace QuanLySinhVien.Repositories
         public string Email { get; set; }
         public string TenLop { get; set; }
         public string Khoa { get; set; }
-        public string TenCaHoc { get; set; }
         public string TrangThai { get; set; }
         public double? Gpa { get; set; }
         public string XepLoai { get; set; }

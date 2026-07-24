@@ -74,12 +74,13 @@ namespace QuanLySinhVien.Repositories
             }
         }
 
-        // Không cho xóa môn học nếu đã có sinh viên được nhập điểm cho môn này
+        // Không cho xóa môn học nếu đã có sinh viên đăng ký hoặc được nhập điểm cho môn này
         public bool CoTheXoa(int monHocId)
         {
             using (var db = new AppDbContext())
             {
-                return !db.DiemSos.Any(d => d.MonHocId == monHocId);
+                return !db.DiemSos.Any(d => d.MonHocId == monHocId)
+                       && !db.DangKyMonHocs.Any(d => d.MonHocId == monHocId);
             }
         }
 

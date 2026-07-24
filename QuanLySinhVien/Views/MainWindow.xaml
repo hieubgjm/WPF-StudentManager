@@ -42,9 +42,6 @@
             <TabItem Header="Lớp học">
                 <views:LopHocControl />
             </TabItem>
-            <TabItem Header="Ca học">
-                <views:CaHocControl />
-            </TabItem>
             <TabItem Header="Môn học">
                 <views:MonHocControl />
             </TabItem>
