@@ -104,7 +104,7 @@ namespace QuanLySinhVien.Views
                 {
                     TongSinhVien = _sinhVienRepo.Tim(tuKhoa: null, lopIdLoc: 0).Count,
                     TongLop = _lopRepo.LayTatCa().Count,
-                    TongCaHoc = _caHocRepo.LayTatCa().Count,
+                    TongDangKy = _dangKyMonHocRepo.DemTongSoDangKy(),
                     SoNam = demGioiTinh.TryGetValue("Nam", out int soNam) ? soNam : 0,
                     SoNu = demGioiTinh.TryGetValue("Nữ", out int soNu) ? soNu : 0,
                     DangHoc = demTrangThai.TryGetValue("Đang học", out int dangHoc) ? dangHoc : 0,

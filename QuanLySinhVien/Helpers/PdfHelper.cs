@@ -264,7 +264,7 @@ namespace QuanLySinhVien.Helpers
                         {
                             row.RelativeItem().Element(OThe).Column(c => TheSoLieu(c, "Tổng số sinh viên", baoCao.TongSinhVien));
                             row.RelativeItem().Element(OThe).Column(c => TheSoLieu(c, "Tổng số lớp", baoCao.TongLop));
-                            row.RelativeItem().Element(OThe).Column(c => TheSoLieu(c, "Tổng số ca học", baoCao.TongCaHoc));
+                            row.RelativeItem().Element(OThe).Column(c => TheSoLieu(c, "Tổng lượt đăng ký môn", baoCao.TongDangKy));
                         });
 
                         col.Item().Row(row =>
@@ -364,7 +364,7 @@ namespace QuanLySinhVien.Helpers
     {
         public int TongSinhVien { get; set; }
         public int TongLop { get; set; }
-        public int TongCaHoc { get; set; }
+        public int TongDangKy { get; set; }
         public int SoNam { get; set; }
         public int SoNu { get; set; }
         public int DangHoc { get; set; }

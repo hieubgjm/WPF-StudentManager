@@ -14,7 +14,7 @@
         <!-- Hướng dẫn + chọn file / xuất file mẫu -->
         <Grid Grid.Row="0" Margin="0,0,0,10">
             <TextBlock TextWrapping="Wrap" Foreground="Gray" VerticalAlignment="Center"
-                       Text="File CSV gồm các cột: MaSV;HoTen;NgaySinh(dd/MM/yyyy);GioiTinh(Nam/Nữ);DiaChi;SoDienThoai;Email;MaLop;TenCaHoc;TrangThai. Có thể để trống DiaChi/SDT/Email/MaLop/TenCaHoc/TrangThai." />
+                       Text="File CSV gồm các cột: MaSV;HoTen;NgaySinh(dd/MM/yyyy);GioiTinh(Nam/Nữ);DiaChi;SoDienThoai;Email;MaLop;TrangThai. Có thể để trống DiaChi/SDT/Email/MaLop/TrangThai." />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Xuất file mẫu..." Style="{StaticResource NutPhu}" Margin="0,0,8,0"
                         Click="btnXuatMau_Click" />
@@ -37,7 +37,6 @@
                 <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="95" />
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="130" />
                 <DataGridTextColumn Header="Mã lớp" Binding="{Binding MaLop}" Width="80" />
-                <DataGridTextColumn Header="Ca học" Binding="{Binding TenCaHoc}" Width="90" />
                 <DataGridTextColumn Header="Trạng thái" Binding="{Binding TrangThai}" Width="90" />
                 <DataGridTextColumn Header="Kết quả kiểm tra" Binding="{Binding KetQua}" Width="*" IsReadOnly="True" />
             </DataGrid.Columns>
