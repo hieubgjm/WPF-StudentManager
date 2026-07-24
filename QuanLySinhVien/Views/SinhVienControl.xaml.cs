@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Win32;
+using QuanLySinhVien.Helpers;
 using QuanLySinhVien.Models;
 using QuanLySinhVien.Repositories;
 
@@ -128,6 +130,47 @@ namespace QuanLySinhVien.Views
 
             _dangKhoiTao = false;
             TaiDuLieu();
+        }
+
+        private void btnXuatPdf_Click(object sender, RoutedEventArgs e)
+        {
+            var danhSach = dgSinhVien.ItemsSource as List<SinhVienHienThi>;
+            if (danhSach == null || danhSach.Count == 0)
+            {
+                MessageBox.Show("Không có sinh viên nào để xuất (kiểm tra lại bộ lọc).", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var hopThoai = new SaveFileDialog
+            {
+                Filter = "Tệp PDF (*.pdf)|*.pdf",
+                FileName = $"DanhSachSinhVien_{DateTime.Now:yyyyMMdd}.pdf"
+            };
+            if (hopThoai.ShowDialog() != true)
+                return;
+
+            try
+            {
+                PdfHelper.XuatDanhSachSinhVien(hopThoai.FileName, danhSach);
+
+                MessageBox.Show("Đã xuất danh sách sinh viên.", "Thành công",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Xuất PDF thất bại: " + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnNhapTuFile_Click(object sender, RoutedEventArgs e)
+        {
+            var cuaSo = new NhapSinhVienTuFileWindow { Owner = Window.GetWindow(this) };
+            if (cuaSo.ShowDialog() == true)
+            {
+                TaiDuLieu();
+            }
         }
 
         private void btnThem_Click(object sender, RoutedEventArgs e)

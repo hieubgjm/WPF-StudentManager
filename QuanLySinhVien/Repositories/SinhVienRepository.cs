@@ -78,6 +78,28 @@ namespace QuanLySinhVien.Repositories
             }
         }
 
+        // Thêm hàng loạt sinh viên cùng lúc, dùng cho màn hình "Nhập sinh viên từ file".
+        public void ThemHangLoat(List<SinhVien> danhSach)
+        {
+            using (var db = new AppDbContext())
+            {
+                db.SinhViens.AddRange(danhSach);
+                db.SaveChanges();
+            }
+        }
+
+        // Lấy toàn bộ mã SV hiện có (không phân biệt hoa thường) để kiểm tra trùng
+        // hàng loạt khi nhập từ file, tránh phải gọi DaTonTaiMaSV riêng từng dòng.
+        public HashSet<string> LayTatCaMaSV()
+        {
+            using (var db = new AppDbContext())
+            {
+                return new HashSet<string>(
+                    db.SinhViens.Select(sv => sv.MaSV),
+                    StringComparer.OrdinalIgnoreCase);
+            }
+        }
+
         public void Sua(SinhVien sinhVien)
         {
             using (var db = new AppDbContext())

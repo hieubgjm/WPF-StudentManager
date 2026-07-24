@@ -27,6 +27,10 @@
 
     <!-- Vẽ biểu đồ cột cho màn hình Dashboard (Sinh viên theo Khoa/Khóa học) -->
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.5" />
+
+    <!-- Xuất phiếu điểm/bảng điểm ra PDF. Dùng license Community (miễn phí),
+         xem QuestPDF.Settings.License được set ở App.xaml.cs -->
+    <PackageReference Include="QuestPDF" Version="2025.7.4" />
   </ItemGroup>
 
 </Project>

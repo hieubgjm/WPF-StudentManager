@@ -13,6 +13,10 @@ namespace QuanLySinhVien
         {
             base.OnStartup(e);
 
+            // Bắt buộc phải khai báo license (miễn phí - Community) trước khi dùng QuestPDF
+            // để xuất PDF ở bất kỳ đâu trong app, xem Helpers/PdfHelper.cs
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
             // Trước khi cho người dùng làm gì cả, đảm bảo database đã tồn tại
             // và có sẵn ít nhất 1 tài khoản admin để đăng nhập lần đầu.
             try

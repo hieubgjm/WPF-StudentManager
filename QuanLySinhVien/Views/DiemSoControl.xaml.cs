@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Win32;
 using QuanLySinhVien.Helpers;
 using QuanLySinhVien.Models;
 using QuanLySinhVien.Repositories;
@@ -95,6 +97,51 @@ namespace QuanLySinhVien.Views
             double? gpa = XepLoaiHelper.TinhGpa(danhSachDiem);
             lblGpa.Text = gpa.HasValue ? gpa.Value.ToString("N2") : "--";
             lblXepLoai.Text = XepLoaiHelper.XepLoaiTuGpa(gpa);
+        }
+
+        private void btnNhapBangDiem_Click(object sender, RoutedEventArgs e)
+        {
+            var cuaSo = new NhapBangDiemWindow { Owner = Window.GetWindow(this) };
+            if (cuaSo.ShowDialog() == true)
+            {
+                TaiDanhSachSinhVien();
+            }
+        }
+
+        private void btnXuatPdf_Click(object sender, RoutedEventArgs e)
+        {
+            var sv = SinhVienDangChon;
+            if (sv == null)
+            {
+                MessageBox.Show("Vui lòng chọn 1 sinh viên trước.", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var hopThoai = new SaveFileDialog
+            {
+                Filter = "Tệp PDF (*.pdf)|*.pdf",
+                FileName = $"PhieuDiem_{sv.MaSV}.pdf"
+            };
+            if (hopThoai.ShowDialog() != true)
+                return;
+
+            try
+            {
+                var danhSachDiem = _diemSoRepo.LayTheoSinhVien(sv.SinhVienId);
+                double? gpa = XepLoaiHelper.TinhGpa(danhSachDiem);
+                string xepLoai = XepLoaiHelper.XepLoaiTuGpa(gpa);
+
+                PdfHelper.XuatPhieuDiemCaNhan(hopThoai.FileName, sv, danhSachDiem, gpa, xepLoai);
+
+                MessageBox.Show("Đã xuất phiếu điểm.", "Thành công",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Xuất PDF thất bại: " + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnThemDiem_Click(object sender, RoutedEventArgs e)

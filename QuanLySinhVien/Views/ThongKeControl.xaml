@@ -16,8 +16,11 @@
 
             <Grid Grid.Row="0" Margin="0,0,0,10">
                 <TextBlock Text="Dashboard" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
-                <Button Content="Làm mới" Style="{StaticResource NutPhu}"
-                        HorizontalAlignment="Right" Click="btnLamMoi_Click" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Xuất PDF..." Style="{StaticResource NutPhu}" Margin="0,0,8,0"
+                            Click="btnXuatPdf_Click" />
+                    <Button Content="Làm mới" Style="{StaticResource NutPhu}" Click="btnLamMoi_Click" />
+                </StackPanel>
             </Grid>
 
             <!-- Hàng thẻ số liệu tổng quan: 2 dòng x 4 ô cho gọn -->

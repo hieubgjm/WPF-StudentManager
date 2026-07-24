@@ -86,5 +86,65 @@ namespace QuanLySinhVien.Repositories
         {
             return XepLoaiHelper.TinhGpa(LayTheoSinhVien(sinhVienId));
         }
+
+        // Lấy điểm môn học "monHocId" của toàn bộ sinh viên thuộc lớp "lopId",
+        // dùng cho màn hình nhập bảng điểm hàng loạt theo lớp.
+        public List<DiemSo> LayTheoLopVaMon(int lopId, int monHocId)
+        {
+            using (var db = new AppDbContext())
+            {
+                return db.DiemSos
+                    .Where(d => d.MonHocId == monHocId && d.SinhVien.LopId == lopId)
+                    .ToList();
+            }
+        }
+
+        // Lưu hàng loạt điểm môn "monHocId" cho nhiều sinh viên cùng lúc: sinh viên nào
+        // đã có điểm môn này thì cập nhật, chưa có thì thêm mới. Dòng nào cả 2 cột điểm
+        // đều để trống thì bỏ qua, không tạo dòng điểm rỗng.
+        public void LuuHangLoat(int monHocId, List<DiemNhapDto> danhSach)
+        {
+            using (var db = new AppDbContext())
+            {
+                var daCo = db.DiemSos
+                    .Where(d => d.MonHocId == monHocId)
+                    .ToDictionary(d => d.SinhVienId);
+
+                foreach (var dto in danhSach)
+                {
+                    if (dto.DiemGiuaKy == null && dto.DiemCuoiKy == null)
+                        continue;
+
+                    if (daCo.TryGetValue(dto.SinhVienId, out var diemCu))
+                    {
+                        diemCu.DiemGiuaKy = dto.DiemGiuaKy;
+                        diemCu.DiemCuoiKy = dto.DiemCuoiKy;
+                    }
+                    else
+                    {
+                        db.DiemSos.Add(new DiemSo
+                        {
+                            SinhVienId = dto.SinhVienId,
+                            MonHocId = monHocId,
+                            DiemGiuaKy = dto.DiemGiuaKy,
+                            DiemCuoiKy = dto.DiemCuoiKy
+                        });
+                    }
+                }
+
+                db.SaveChanges();
+            }
+        }
+    }
+
+    // 1 dòng trong màn "Nhập bảng điểm theo lớp": gộp thông tin sinh viên với điểm
+    // giữa kỳ/cuối kỳ của môn đang chọn (điểm có thể lấy từ dữ liệu cũ hoặc đang gõ dở).
+    public class DiemNhapDto
+    {
+        public int SinhVienId { get; set; }
+        public string MaSV { get; set; }
+        public string HoTen { get; set; }
+        public double? DiemGiuaKy { get; set; }
+        public double? DiemCuoiKy { get; set; }
     }
 }

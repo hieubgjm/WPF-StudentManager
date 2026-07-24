@@ -13,6 +13,10 @@
             <TextBlock Text="Danh sách sinh viên" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Xuất PDF..." Style="{StaticResource NutPhu}" Margin="0,0,8,0"
+                        Click="btnXuatPdf_Click" />
+                <Button Content="Nhập từ file CSV..." Style="{StaticResource NutPhu}" Margin="0,0,8,0"
+                        Click="btnNhapTuFile_Click" />
                 <Button Content="Thêm" Style="{StaticResource NutChinh}" Margin="0,0,8,0" Click="btnThem_Click" />
                 <Button Content="Sửa" Style="{StaticResource NutChinh}" Margin="0,0,8,0" Click="btnSua_Click" />
                 <Button Content="Xóa" Style="{StaticResource NutXoa}" Click="btnXoa_Click" />
